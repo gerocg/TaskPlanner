@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37806.7 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskPlanner", "TaskPlanner\TaskPlanner.csproj", "{AAFC1239-CED9-4481-808D-934987E90EA2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AAFC1239-CED9-4481-808D-934987E90EA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAFC1239-CED9-4481-808D-934987E90EA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAFC1239-CED9-4481-808D-934987E90EA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAFC1239-CED9-4481-808D-934987E90EA2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C5940B7E-6A2C-4882-8079-142BC356570E}
+	EndGlobalSection
+EndGlobal

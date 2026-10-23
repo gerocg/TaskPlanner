@@ -1,0 +1,370 @@
+﻿<Window x:Class="TaskPlanner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Lista de tareas"
+        Height="800"
+        Width="1000"
+        MinHeight="650"
+        MinWidth="750"
+        WindowStartupLocation="CenterScreen"
+        Background="#17191F"
+        Foreground="#F1F2F5"
+        FontFamily="Segoe UI"
+        Icon="icono.ico"
+        Closing="Window_Closing">
+
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#292C35"/>
+            <Setter Property="Foreground" Value="#F1F2F5"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Campo de texto interno del calendario: fondo oscuro y texto claro -->
+        <Style TargetType="{x:Type DatePickerTextBox}">
+            <Setter Property="Background" Value="#17191F"/>
+            <Setter Property="Foreground" Value="#F1F2F5"/>
+            <Setter Property="CaretBrush" Value="#F1F2F5"/>
+            <Setter Property="SelectionBrush" Value="#A7E3C0"/>
+            <Setter Property="BorderBrush" Value="#3A3E49"/>
+            <Setter Property="Padding" Value="6,4"/>
+        </Style>
+
+        <Style TargetType="DatePicker">
+            <Setter Property="Background" Value="#17191F"/>
+            <Setter Property="Foreground" Value="#F1F2F5"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="MinHeight" Value="42"/>
+            <Setter Property="BorderBrush" Value="#3A3E49"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CalendarStyle">
+                <Setter.Value>
+                    <Style TargetType="{x:Type Calendar}">
+                        <Setter Property="Background" Value="#22252D"/>
+                        <Setter Property="Foreground" Value="#F1F2F5"/>
+                        <Setter Property="BorderBrush" Value="#3A3E49"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type CalendarDayButton}">
+            <Setter Property="Foreground" Value="#A7E3C0"/>
+            <Setter Property="Background" Value="#22252D"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+
+        <Style TargetType="{x:Type CalendarButton}">
+            <Setter Property="Foreground" Value="#F1F2F5"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#F1F2F5"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="32">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Encabezado -->
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="LISTA DE TAREAS"
+                       FontSize="12"
+                       FontWeight="SemiBold"
+                       Foreground="#A7E3C0"
+                       Margin="0,0,0,10"/>
+
+            <TextBlock Text="Planificador de tareas"
+                       FontSize="30"
+                       FontWeight="SemiBold"/>
+
+            <TextBlock Text="Suma tareas que se te ocurran para mañana."
+                       FontSize="14"
+                       Foreground="#999EAD"
+                       Margin="0,6,0,0"/>
+            <CheckBox x:Name="StartupCheckBox"
+                      Content="Iniciar automáticamente con Windows"
+                      Foreground="#999EAD"
+                      FontSize="12"
+                      Margin="0,12,0,0"
+                      Checked="StartupCheckBox_Changed"
+                      Unchecked="StartupCheckBox_Changed"/>
+        </StackPanel>
+
+        <!-- Navegación por fechas -->
+        <Border Grid.Row="1"
+                Background="#22252D"
+                CornerRadius="12"
+                Padding="14"
+                Margin="0,24,0,20">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="1.35*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Content="← Ayer"
+                        Click="Yesterday_Click"
+                        MinHeight="42"
+                        HorizontalAlignment="Stretch"
+                        Margin="0,0,8,0"/>
+
+                <Button Grid.Column="1"
+                        Content="Hoy"
+                        Click="Today_Click"
+                        MinHeight="42"
+                        HorizontalAlignment="Stretch"
+                        Margin="4,0,4,0"/>
+
+                <Button Grid.Column="2"
+                        Content="Mañana →"
+                        Click="Tomorrow_Click"
+                        MinHeight="42"
+                        HorizontalAlignment="Stretch"
+                        Margin="8,0,8,0"/>
+
+                <DatePicker x:Name="DateSelector"
+                            Grid.Column="3"
+                            SelectedDateChanged="DateSelector_Changed"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            Margin="8,0,0,0"/>
+            </Grid>
+        </Border>
+
+        <!-- Contenido -->
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Tareas del día seleccionado -->
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Margin="0,0,0,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" MinWidth="280"/>
+
+                        <ColumnDefinition Width="*"/>
+
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Título y progreso -->
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock x:Name="SelectedDateTitle"
+                                   Text="Tareas de hoy"
+                                   FontSize="20"
+                                   FontWeight="SemiBold"/>
+
+                        <TextBlock x:Name="ProgressText"
+                                   Text="0 de 0 tareas"
+                                   Foreground="#999EAD"
+                                   FontSize="13"
+                                   Margin="0,5,0,0"/>
+                    </StackPanel>
+
+                    <!-- Botones de acción -->
+                    <StackPanel Grid.Column="2"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right">
+
+                        <!-- Botón principal para planificar mañana (solo visible si es Hoy) -->
+                        <Button x:Name="AddTomorrowTaskButton"
+                                Content="+ Agregar tarea para mañana"
+                                Background="#A7E3C0"
+                                Foreground="#17251D"
+                                FontWeight="SemiBold"
+                                FontSize="13"
+                                Padding="14,10"
+                                MinHeight="42"
+                                Click="AddTomorrowTask_Click"/>
+
+                        <!-- Botón para agregar al día seleccionado actualmente -->
+                        <Button Content="+ Agregar tarea a este día"
+                                Background="#292C35"
+                                Foreground="#F1F2F5"
+                                FontWeight="SemiBold"
+                                FontSize="13"
+                                Padding="14,10"
+                                MinHeight="42"
+                                Margin="0,0,8,0"
+                                Click="AddTaskForSelectedDate_Click"/>
+
+                        
+                    </StackPanel>
+                </Grid>
+
+                <Border Grid.Row="1"
+                        Background="#22252D"
+                        CornerRadius="12"
+                        Padding="12">
+
+                    <Grid>
+                        <TextBlock x:Name="EmptyStateText"
+                                   Text="Todo empieza con una tarea&#10;Agregá lo que quieras hacer este día."
+                                   FontSize="15"
+                                   Foreground="#999EAD"
+                                   TextAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"/>
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl x:Name="TasksList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#2B2E38"
+                                                CornerRadius="8"
+                                                Padding="12"
+                                                Margin="0,0,0,8">
+                                            <DockPanel>
+                                                <Button Content="×"
+                                                        Background="Transparent"
+                                                        Foreground="#999EAD"
+                                                        Padding="8,4"
+                                                        DockPanel.Dock="Right"
+                                                        Click="DeleteTask_Click"/>
+
+                                                <CheckBox IsChecked="{Binding IsCompleted}"
+                                                          VerticalAlignment="Center"
+                                                          Margin="0,0,12,0"
+                                                          Checked="TaskCompleted_Changed"
+                                                          Unchecked="TaskCompleted_Changed"/>
+
+                                                <TextBlock Text="{Binding Title}"
+                                                           FontSize="15"
+                                                           VerticalAlignment="Center"
+                                                           TextWrapping="Wrap">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Foreground"
+                                                                    Value="#F1F2F5"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsCompleted}"
+                                                                             Value="True">
+                                                                    <Setter Property="Foreground"
+                                                                            Value="#777D8B"/>
+                                                                    <Setter Property="TextDecorations"
+                                                                            Value="Strikethrough"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </DockPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Tareas atrasadas -->
+            <Border x:Name="OverduePanel"
+                    Grid.Row="1"
+                    Background="#30252A"
+                    CornerRadius="12"
+                    Padding="14"
+                    Margin="0,16,0,0"
+                    Visibility="Collapsed">
+
+                <StackPanel>
+                    <TextBlock Text="Pendientes atrasadas"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="#F0B4B4"/>
+
+                    <TextBlock Text="Tareas de días anteriores que todavía no completaste."
+                               FontSize="12"
+                               Foreground="#C9A6AA"
+                               Margin="0,5,0,10"
+                               TextWrapping="Wrap"/>
+
+                    <ScrollViewer MaxHeight="150"
+                                  VerticalScrollBarVisibility="Auto">
+                        <ItemsControl x:Name="OverdueTasksList">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#3A2C32"
+                                            CornerRadius="8"
+                                            Padding="10"
+                                            Margin="0,0,0,6">
+                                        <DockPanel>
+                                            <Button Content="×"
+                                                    Background="Transparent"
+                                                    Foreground="#C9A6AA"
+                                                    Padding="8,4"
+                                                    DockPanel.Dock="Right"
+                                                    Click="DeleteTask_Click"/>
+
+                                            <CheckBox IsChecked="{Binding IsCompleted}"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,10,0"
+                                                      Checked="TaskCompleted_Changed"
+                                                      Unchecked="TaskCompleted_Changed"/>
+
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Title}"
+                                                           FontSize="14"
+                                                           TextWrapping="Wrap"/>
+
+                                                <TextBlock Text="{Binding Date, StringFormat={}{0:dd/MM/yyyy}}"
+                                                           FontSize="11"
+                                                           Foreground="#C9A6AA"
+                                                           Margin="0,3,0,0"/>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Pie -->
+        <TextBlock Grid.Row="3"
+                   Text="GERÓNIMO 2026"
+                   FontSize="10"
+                   Foreground="#777D8B"
+                   HorizontalAlignment="Center"
+                   Margin="0,16,0,0"/>
+    </Grid>
+</Window>
