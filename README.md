@@ -40,9 +40,9 @@ Si querés probar la aplicación en tu máquina local, podés hacerlo clonando e
 
 ---
 
-### Pasos para Ejecutar desde el Código Fuente
+### Descarga Directa (.exe)
 
-1. **Clonar el repositorio:**
-   ```bash
-   git clone [https://github.com/gerocg/TaskPlanner.git](https://github.com/gerocg/TaskPlanner.git)
-   cd TaskPlanner
+Si solo querés usar la aplicación sin compilar el código:
+1. Andá a la sección de [Releases de este repositorio](https://github.com/gerogc/TaskPlanner/releases).
+2. Descargá el archivo `TaskPlanner.exe` adjunto en la última versión.
+3. Ejecutalo directamente en Windows 10/11.
