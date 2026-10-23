@@ -43,6 +43,6 @@ Si querés probar la aplicación en tu máquina local, podés hacerlo clonando e
 ### Descarga Directa (.exe)
 
 Si solo querés usar la aplicación sin compilar el código:
-1. Andá a la sección de [Releases de este repositorio](https://github.com/gerogc/TaskPlanner/releases).
+1. Andá a la sección de [Releases de este repositorio](https://github.com/gerocg/TaskPlanner/releases/tag/v1.0.0).
 2. Descargá el archivo `TaskPlanner.exe` adjunto en la última versión.
 3. Ejecutalo directamente en Windows 10/11.
